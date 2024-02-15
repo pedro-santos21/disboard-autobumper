@@ -8,6 +8,7 @@ const { Client } = require('discord.js-selfbot-v13');
 const client = new Client();
 
 var token = process.env.TOKEN;
+var bot_id = '302050872383242240';
 var running = true;
 var cooldown=7200*1000; // 2 hours (in ms)
 var inCooldown = false;
@@ -16,7 +17,12 @@ var bumpsInSession = 0;
 // timer
 const timer = ms => new Promise(res => setTimeout(res, ms))
 
-async function Bump(channel_id, bump_message) {
+// random number between x and y
+function randomIntFromInterval(min, max) { // min and max included 
+  return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+function Bump(channel_id) {
 	
 	if (inCooldown) {
 		// console.log("In cooldown") // (for testing if cooldown is working)
@@ -27,28 +33,23 @@ async function Bump(channel_id, bump_message) {
 	
 	if (channel) {
 		console.log(`Channel found: ${channel.name}`);
-		channel.sendSlash('302050872383242240', 'bump');
+		channel.sendSlash(bot_id, 'bump');
 	} else {
 		throw new Error('Invalid channel ID - Channel was not found.');
 	}
 	
 	bumpsInSession++;
-	let currentTime = new Date();
+	let currentTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');
 	console.log(`${currentTime} - Bump! (${bumpsInSession})`)
 	
-	inCooldown = true;
-	await timer(cooldown);
-	inCooldown = false;
+	cooldown = randomIntFromInterval(5401, 7201);
+
 }
 
 client.on('ready', async () => {
   	console.log(`${client.user.username} is ready!`);
 	
-	while(running) {
-		(async () => {
-			Bump(process.env.CHANNEL_ID, "/bump");
-		})();
-	}
+	Bump(process.env.CHANNEL_ID);
 })
 
 client.login(token);
