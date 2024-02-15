@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/pedro-santos21/disboard-autobump-2024#readme",
   "dependencies": {
-    "discord.js-selfbot-v13": "^3.1.4"
+    "discord.js-selfbot-v13": "^3.1.4",
+    "dotenv": "^16.4.4"
   }
 }
