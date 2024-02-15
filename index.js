@@ -1,7 +1,9 @@
 
 console.log("Disboard Autobumper 2024 - Brought to you by Max Fox at https://github.com/pedro-santos21")
 
+// imports
 require('dotenv').config();
+const { ToadScheduler, SimpleIntervalJob, Task } = require('toad-scheduler')
 
 // discord.js-selfbot setup
 const { Client } = require('discord.js-selfbot-v13');
@@ -43,13 +45,19 @@ function Bump(channel_id) {
 	console.log(`${currentTime} - Bump! (${bumpsInSession})`)
 	
 	cooldown = randomIntFromInterval(5401, 7201);
-
 }
+
+// setup toad-scheduler
+const scheduler = new ToadScheduler()
+const task = new Task('autobump', () => { Bump(process.env.CHANNEL_ID); })
+const job = new SimpleIntervalJob({ hours: 1, minutes:35 }, task) // create job to bump every 1:35 hrs
 
 client.on('ready', async () => {
   	console.log(`${client.user.username} is ready!`);
 	
+	// bump once then add bump job to schedule
 	Bump(process.env.CHANNEL_ID);
+	scheduler.addSimpleIntervalJob(job);
 })
 
 client.login(token);
