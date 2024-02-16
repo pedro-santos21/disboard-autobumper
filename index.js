@@ -32,7 +32,7 @@ function Bump(channel_id) {
 // setup toad-scheduler
 const scheduler = new ToadScheduler()
 const task = new Task('autobump', () => { Bump(process.env.CHANNEL_ID); })
-const job = new SimpleIntervalJob({ hours: 1, minutes:35 }, task) // create job to bump every 1:35 hrs
+const job = new SimpleIntervalJob({ hours: 2, minutes:2 }, task) // create job to bump every 2 hrs and 2 min
 
 client.on('ready', async () => {
 	// This executes when the Discord selfbot client is connected.
